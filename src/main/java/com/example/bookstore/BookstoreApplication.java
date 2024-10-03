@@ -1,4 +1,4 @@
-package com.example.group5_cen4010;
+package com.example.bookstore;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @SpringBootApplication
 @RestController
-public class Group5Cen4010Application {
+public class BookstoreApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(Group5Cen4010Application.class, args);
+		SpringApplication.run(BookstoreApplication.class, args);
 	}
 
 	@GetMapping
