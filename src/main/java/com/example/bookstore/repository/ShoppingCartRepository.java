@@ -7,3 +7,4 @@ public interface ShoppingCartRepository {
 }
 
 // extends JpaRepository<ShoppingCart, Long>
+// to be modified
