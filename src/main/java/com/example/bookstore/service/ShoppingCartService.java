@@ -8,7 +8,11 @@ import com.example.bookstore.repository.ShoppingCartItemRepository;
 import com.example.bookstore.repository.ShoppingCartRepository;
 import com.example.bookstore.repository.TempUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,17 +32,22 @@ public class ShoppingCartService {
     private TempUserRepository tempUserRepository;
 
 
-    // method retrieves a list of all the "Books" in the Shopping cart
-    public List<Book> getBooksInShoppingCart(Long userID) {
+    public List<EntityModel<Book>> getBooksInShoppingCart(Long userID) {
         ShoppingCart shoppingCart = cartRepository.findByUserUserId(userID)
                 .orElseThrow(() -> new RuntimeException("Shopping cart not found"));
+
         List<ShoppingCartItem> cartItems = cartItemRepository.findByCartCartId(shoppingCart.getCartId());
 
         return cartItems.stream()
-                .map(ShoppingCartItem::getBook)
+                .map(cartItem -> {
+                    Book book = cartItem.getBook();
+
+                    Link selfLink = WebMvcLinkBuilder.linkTo(
+                            WebMvcLinkBuilder.methodOn(ShoppingCartService.class).getBooksInShoppingCart(userID)
+                    ).withSelfRel();
+
+                    return EntityModel.of(book, selfLink);
+                })
                 .collect(Collectors.toList());
     }
-
-
-
 }
