@@ -16,6 +16,7 @@ import java.util.List;
 @RequestMapping("/api/shopping-cart")
 public class ShoppingCartController {
 
+    @Autowired
     private ShoppingCartService shoppingCartService;
 
     @GetMapping("/{userId}/books")
