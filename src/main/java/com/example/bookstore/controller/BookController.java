@@ -24,4 +24,9 @@ public class BookController {
     public Book createBook(@RequestBody Book book) {
         return bookRepository.save(book);
     }
+
+    @GetMapping(path="/{genre}")
+    public List<Book> getBooksByGenre(@PathVariable String genre) {
+        return bookRepository.findBooksByGenre(genre);
+    }
 }
