@@ -1,6 +1,7 @@
 package com.example.bookstore.controller;
 
 import com.example.bookstore.model.Book;
+import com.example.bookstore.model.BookDTO;
 import com.example.bookstore.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,12 +18,17 @@ public class BookController {
     @Autowired
     private BookRepository bookRepository;
 
-    public List<Book> getAllBooks() {
-        return bookRepository.findAll();
+    @GetMapping
+    public List<BookDTO> getAllBooks() {
+        List<Book> books = bookRepository.findAll();
+        return books.stream()
+                .map(book -> new BookDTO(book.getISBN(), book.getTitle()))
+                .toList();
+
     }
 
     @GetMapping("/genre")
-    public List<Book> getBooksByGenre(@RequestParam String genre) {
+    public List<BookDTO> getBooksByGenre(@RequestParam String genre) {
         genre = genre.trim();
         System.out.println("Searching for genre: " + genre);
         List<Book> books = bookRepository.findByGenreIgnoreCase(genre);
@@ -31,11 +37,9 @@ public class BookController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No books found with genre: " + genre);
         }
 
-        return books;
+        return books.stream()
+                .map(book -> new BookDTO(book.getISBN(), book.getTitle()))
+                .toList();
     }
 
-    @PostMapping
-    public Book createBook(@RequestBody Book book) {
-        return bookRepository.save(book);
-    }
 }
