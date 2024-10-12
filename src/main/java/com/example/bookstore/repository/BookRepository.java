@@ -7,6 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface BookRepository extends JpaRepository<Book, String> {
-    List<Book> findBooksByGenre(String genre);
+    List<Book> findByGenreIgnoreCase(String genre);
 
 }

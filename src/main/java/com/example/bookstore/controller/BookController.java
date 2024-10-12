@@ -27,6 +27,8 @@ public class BookController {
 
     @GetMapping(path="/{genre}")
     public List<Book> getBooksByGenre(@PathVariable String genre) {
-        return bookRepository.findBooksByGenre(genre);
+        genre = genre.trim();
+        System.out.println("Searching for genre " + genre);
+        return bookRepository.findByGenreIgnoreCase(genre);
     }
 }
