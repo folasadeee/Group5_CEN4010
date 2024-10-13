@@ -36,7 +36,7 @@ public class ShoppingCartService {
         ShoppingCart shoppingCart = cartRepository.findByUserUserId(userID)
                 .orElseThrow(() -> new RuntimeException("Shopping cart not found"));
 
-        List<ShoppingCartItem> cartItems = cartItemRepository.findByCartCartId(shoppingCart.getCartId());
+        List<ShoppingCartItem> cartItems = cartItemRepository.findByShoppingCartCartId(shoppingCart.getCartId());
 
         return cartItems.stream()
                 .map(cartItem -> {
