@@ -34,6 +34,7 @@ public class ShoppingCartService {
     private TempUserRepository tempUserRepository;
 
 
+    // Get all books in shopping cart ----------------------------------------------------------------------------------
     public List<EntityModel<ShoppingCartItemDTO>> getBooksInShoppingCart(Long userID) {
         ShoppingCart shoppingCart = cartRepository.findByUserUserId(userID)
                 .orElseThrow(() -> new RuntimeException("Shopping cart not found"));
@@ -57,6 +58,7 @@ public class ShoppingCartService {
     }
 
 
+    // Add book to shopping cart ---------------------------------------------------------------------------------------
     public void addBookToShoppingCart(Long userId, String isbn) {
         ShoppingCart cart = cartRepository.findByUserUserId(userId)
                 .orElseGet(() -> {
@@ -85,4 +87,16 @@ public class ShoppingCartService {
         cartItemRepository.save(item);
     }
 
+
+    // Delete a book from shopping cart, quantity 0 --------------------------------------------------------------------
+    public void removeBookFromShoppingCart(Long userId, String isbn) {
+        ShoppingCart shoppingCart = cartRepository.findByUserUserId(userId)
+                .orElseThrow(() -> new RuntimeException("Shopping cart not found"));
+
+        ShoppingCartItem book = cartItemRepository.findByShoppingCartCartIdAndBookISBN(shoppingCart.getCartId(), isbn)
+                .orElseThrow(() -> new RuntimeException("Book not found in shopping cart"));
+
+        book.setQuantity(book.getQuantity() - 1);
+        cartItemRepository.delete(book);
+    }
 }

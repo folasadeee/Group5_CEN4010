@@ -1,7 +1,6 @@
 package com.example.bookstore.controller;
 
 import com.example.bookstore.dto.ShoppingCartItemDTO;
-import com.example.bookstore.model.Book;
 import com.example.bookstore.service.ShoppingCartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,17 +18,32 @@ public class ShoppingCartController {
     private ShoppingCartService shoppingCartService;
 
 
+    // GET: all user books in shopping cart ----------------------------------------------------------------------------
     @GetMapping("/{userId}/books")
     public List<EntityModel<ShoppingCartItemDTO>> getBooksInShoppingCart(@PathVariable Long userId) {
         return shoppingCartService.getBooksInShoppingCart(userId);
     }
 
+
+    // POST: add book to user shopping cart ----------------------------------------------------------------------------
     @PostMapping("/{userId}/add-book")
     public ResponseEntity<Void> addBookToShoppingCart(
             @PathVariable Long userId,
             @RequestBody Map<String, String> request) {
         String isbn = request.get("isbn");
         shoppingCartService.addBookToShoppingCart(userId, isbn);
+
+        return ResponseEntity.ok().build();
+    }
+
+
+    // DELETE: remove book from user shopping cart ---------------------------------------------------------------------
+    @DeleteMapping("/{userId}/remove-book")
+    public ResponseEntity<Void> removeBookFromShoppingCart(
+            @PathVariable Long userId,
+            @RequestBody Map<String, String> request) {
+        String isbn = request.get("isbn");
+        shoppingCartService.removeBookFromShoppingCart(userId, isbn);
 
         return ResponseEntity.ok().build();
     }
