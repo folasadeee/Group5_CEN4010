@@ -16,6 +16,7 @@ import org.springframework.hateoas.Link;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.hateoas.CollectionModel;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -29,6 +30,15 @@ public class ShoppingCartController {
     @GetMapping("/{userId}/books")
     public List<EntityModel<Book>> getBooksInShoppingCart(@PathVariable Long userId) {
         return shoppingCartService.getBooksInShoppingCart(userId);
+    }
+
+    @PostMapping("/{userId}/add-book")
+    public ResponseEntity<Void> addBookToShoppingCart(
+            @PathVariable Long userId,
+            @RequestBody Map<String, String> requestBody) {
+        String isbn = requestBody.get("isbn");
+        shoppingCartService.addBookToShoppingCart(userId, isbn);
+        return ResponseEntity.ok().build();
     }
 
 }

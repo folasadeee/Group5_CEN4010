@@ -3,6 +3,7 @@ package com.example.bookstore.service;
 import com.example.bookstore.model.Book;
 import com.example.bookstore.model.ShoppingCart;
 import com.example.bookstore.model.ShoppingCartItem;
+import com.example.bookstore.model.ShoppingCartItemId;
 import com.example.bookstore.repository.BookRepository;
 import com.example.bookstore.repository.ShoppingCartItemRepository;
 import com.example.bookstore.repository.ShoppingCartRepository;
@@ -50,4 +51,33 @@ public class ShoppingCartService {
                 })
                 .collect(Collectors.toList());
     }
+
+    public void addBookToShoppingCart(Long userId, String isbn) {
+        ShoppingCart cart = cartRepository.findByUserUserId(userId)
+                .orElseGet(() -> {
+                    ShoppingCart newCart = new ShoppingCart();
+                    newCart.setUser(tempUserRepository.findById(userId)
+                            .orElseThrow(() -> new RuntimeException("User not found")));
+                    return cartRepository.save(newCart);
+                });
+
+        Book book = bookRepository.findById(isbn)
+                .orElseThrow(() -> new RuntimeException("Book not found"));
+
+        ShoppingCartItem item = cartItemRepository.findByShoppingCartCartIdAndBookISBN(cart.getCartId(), isbn)
+                .orElseGet(() -> {
+                    ShoppingCartItem newItem = new ShoppingCartItem();
+                    ShoppingCartItemId newId = new ShoppingCartItemId();
+                    newId.setCartId(cart.getCartId());
+                    newId.setISBN(isbn);
+                    newItem.setId(newId);
+                    newItem.setShoppingCart(cart);
+                    newItem.setBook(book);
+                    return newItem;
+                });
+
+        item.setQuantity(item.getQuantity() + 1);
+        cartItemRepository.save(item);
+    }
+
 }

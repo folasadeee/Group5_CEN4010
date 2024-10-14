@@ -1,11 +1,14 @@
 package com.example.bookstore.model;
 
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.io.Serializable;
 
 @Embeddable
 public class ShoppingCartItemId implements Serializable {
+    @Column(name = "cart_id")
     private Long cartId;
+    @Column(name = "ISBN")
     private String ISBN;
 
     public ShoppingCartItemId() {}

@@ -17,7 +17,7 @@ public class ShoppingCartItem implements Serializable {
 
     @ManyToOne
     @MapsId("ISBN") // This refers to the ISBN field in ShoppingCartItemId
-    @JoinColumn(name = "isbn")
+    @JoinColumn(name = "ISBN")
     private Book book;
 
     private int quantity;
