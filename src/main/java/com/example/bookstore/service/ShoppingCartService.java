@@ -1,5 +1,6 @@
 package com.example.bookstore.service;
 
+import com.example.bookstore.dto.ShoppingCartItemDTO;
 import com.example.bookstore.model.Book;
 import com.example.bookstore.model.ShoppingCart;
 import com.example.bookstore.model.ShoppingCartItem;
@@ -33,7 +34,7 @@ public class ShoppingCartService {
     private TempUserRepository tempUserRepository;
 
 
-    public List<EntityModel<Book>> getBooksInShoppingCart(Long userID) {
+    public List<EntityModel<ShoppingCartItemDTO>> getBooksInShoppingCart(Long userID) {
         ShoppingCart shoppingCart = cartRepository.findByUserUserId(userID)
                 .orElseThrow(() -> new RuntimeException("Shopping cart not found"));
 
@@ -42,12 +43,15 @@ public class ShoppingCartService {
         return cartItems.stream()
                 .map(cartItem -> {
                     Book book = cartItem.getBook();
+                    Integer quantity = cartItem.getQuantity(); // new
+
+                    ShoppingCartItemDTO shoppingCartItemDTO = new ShoppingCartItemDTO(book, quantity);
 
                     Link selfLink = WebMvcLinkBuilder.linkTo(
                             WebMvcLinkBuilder.methodOn(ShoppingCartService.class).getBooksInShoppingCart(userID)
                     ).withSelfRel();
 
-                    return EntityModel.of(book, selfLink);
+                    return EntityModel.of(shoppingCartItemDTO, selfLink); // new (book, quantity, selfLink);
                 })
                 .collect(Collectors.toList());
     }
