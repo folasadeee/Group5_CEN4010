@@ -1,6 +1,9 @@
 package com.example.bookstore.service;
 
+import com.example.bookstore.controller.HomeController;
+import com.example.bookstore.controller.ShoppingCartController;
 import com.example.bookstore.dto.ShoppingCartItemDTO;
+import com.example.bookstore.dto.ShoppingCartSubtotalResource;
 import com.example.bookstore.model.Book;
 import com.example.bookstore.model.ShoppingCart;
 import com.example.bookstore.model.ShoppingCartItem;
@@ -49,10 +52,23 @@ public class ShoppingCartService {
                     ShoppingCartItemDTO shoppingCartItemDTO = new ShoppingCartItemDTO(book, quantity);
 
                     Link selfLink = WebMvcLinkBuilder.linkTo(
-                            WebMvcLinkBuilder.methodOn(ShoppingCartService.class).getBooksInShoppingCart(userID)
-                    ).withSelfRel();
+                            WebMvcLinkBuilder.methodOn(ShoppingCartController.class).getBooksInShoppingCart(userID)
+                    ).withRel("shopping-cart-books");
 
-                    return EntityModel.of(shoppingCartItemDTO, selfLink); // new (book, quantity, selfLink);
+                    Link cartSubtotalLink = WebMvcLinkBuilder.linkTo(
+                            WebMvcLinkBuilder.methodOn(ShoppingCartController.class).getShoppingCartSubtotal(userID)
+                    ).withRel("shopping-cart-subtotal");
+
+                    Link shoppingCartRootLink = WebMvcLinkBuilder.linkTo(
+                            WebMvcLinkBuilder.methodOn(ShoppingCartController.class).getShoppingCartRoot()
+                    ).withRel("shopping-cart-root");
+
+                    Link rootLink = WebMvcLinkBuilder.linkTo(
+                            WebMvcLinkBuilder.methodOn(HomeController.class).getRoot()
+                    ).withRel("root");
+
+                    return EntityModel.of(shoppingCartItemDTO, selfLink, cartSubtotalLink,
+                            shoppingCartRootLink, rootLink);
                 })
                 .collect(Collectors.toList());
     }
@@ -98,5 +114,46 @@ public class ShoppingCartService {
 
         book.setQuantity(book.getQuantity() - 1);
         cartItemRepository.delete(book);
+    }
+
+
+    // Retrieve shopping cart subtotal ---------------------------------------------------------------------------------
+    public ShoppingCartSubtotalResource getShoppingCartSubtotal(Long userID) {
+        ShoppingCart shoppingCart = cartRepository.findByUserUserId(userID)
+                .orElseThrow(() -> new RuntimeException("Shopping cart not found"));
+
+        List<ShoppingCartItem> shoppingCartItems = cartItemRepository
+                .findByShoppingCartCartId(shoppingCart.getCartId());
+
+        double subtotal = shoppingCartItems.stream()
+                .mapToDouble(cartItem -> cartItem.getBook().getPrice() * cartItem.getQuantity())
+                .sum();
+
+        ShoppingCartSubtotalResource resource = new ShoppingCartSubtotalResource(subtotal);
+
+
+        Link selfLink = WebMvcLinkBuilder.linkTo(
+                WebMvcLinkBuilder.methodOn(ShoppingCartController.class).getShoppingCartSubtotal(userID)
+        ).withRel("shopping-cart-subtotal");
+
+        Link getBooksLink = WebMvcLinkBuilder.linkTo(
+                WebMvcLinkBuilder.methodOn(ShoppingCartController.class).getBooksInShoppingCart(userID)
+        ).withRel("shopping-cart-books");
+
+        Link shoppingCartRootLink = WebMvcLinkBuilder.linkTo(
+                WebMvcLinkBuilder.methodOn(ShoppingCartController.class).getShoppingCartRoot()
+        ).withRel("shopping-cart-root");
+
+        Link rootLink = WebMvcLinkBuilder.linkTo(
+                WebMvcLinkBuilder.methodOn(HomeController.class).getRoot()
+        ).withRel("root");
+
+
+        resource.add(selfLink);
+        resource.add(getBooksLink);
+        resource.add(shoppingCartRootLink);
+        resource.add(rootLink);
+
+        return resource;
     }
 }
