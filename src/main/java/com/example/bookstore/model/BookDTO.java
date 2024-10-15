@@ -2,7 +2,6 @@ package com.example.bookstore.model;
 
 import javax.persistence.*;
 
-@Entity
 public class BookDTO {
     @Id
     private String ISBN;
@@ -12,12 +11,6 @@ public class BookDTO {
         this.ISBN = ISBN;
         this.title = title;
     }
-
-    public BookDTO() {
-        this.ISBN = "0000000000000";
-        this.title = "Default title";
-    }
-
 
     public String getISBN() {
         return ISBN;
