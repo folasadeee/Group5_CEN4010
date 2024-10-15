@@ -1,4 +1,4 @@
-package com.example.group5_cen4010.profile_management;
+package com.example.bookstore.model;
 import javax.persistence.*;
 
 @Entity
@@ -25,7 +25,7 @@ public class UserProfile {
 
     @Column (name = "address")
     private String address;
-
+    
     @Column (name = "email")
     private String email;
 

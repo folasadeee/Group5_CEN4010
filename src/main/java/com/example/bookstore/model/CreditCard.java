@@ -1,4 +1,5 @@
-package com.example.group5_cen4010.profile_management;
+package com.example.bookstore.model;
+
 import javax.persistence.*;
 import java.util.Date;
 
