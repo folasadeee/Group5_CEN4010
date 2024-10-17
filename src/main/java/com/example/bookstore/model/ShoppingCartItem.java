@@ -1,39 +1,42 @@
 package com.example.bookstore.model;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "shopping_cart_items")
-@IdClass(ShoppingCartItemId.class)
-public class ShoppingCartItem {
+public class ShoppingCartItem implements Serializable {
 
-    @Id
-    @Column(name = "cart_id")
-    private Long cartId;
-
-    @Id
-    @Column(name = "isbn")
-    private String isbn;
+    @EmbeddedId
+    private ShoppingCartItemId id;
 
     @ManyToOne
-    @JoinColumn(name = "cart_id", insertable = false, updatable = false)
-    private ShoppingCart cart;
+    @MapsId("cartId") // This refers to the cartId field in ShoppingCartItemId
+    @JoinColumn(name = "cart_id")
+    private ShoppingCart shoppingCart;
 
     @ManyToOne
-    @JoinColumn(name = "isbn", insertable = false, updatable = false)
+    @MapsId("ISBN") // This refers to the ISBN field in ShoppingCartItemId
+    @JoinColumn(name = "ISBN")
     private Book book;
 
-    // This functionality is outside the scope of this project, therefore its default is one
-    @Column
-    private Integer quantity = 1;
+    private int quantity;
 
-
-    public ShoppingCart getCart() {
-        return cart;
+    // Getters and setters
+    public ShoppingCartItemId getId() {
+        return id;
     }
 
-    public void setCart(ShoppingCart shoppingCart) {
-        this.cart = shoppingCart;
+    public void setId(ShoppingCartItemId id) {
+        this.id = id;
+    }
+
+    public ShoppingCart getShoppingCart() {
+        return shoppingCart;
+    }
+
+    public void setShoppingCart(ShoppingCart shoppingCart) {
+        this.shoppingCart = shoppingCart;
     }
 
     public Book getBook() {
@@ -44,11 +47,11 @@ public class ShoppingCartItem {
         this.book = book;
     }
 
-    public Integer getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Integer quantity) {
+    public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
 }

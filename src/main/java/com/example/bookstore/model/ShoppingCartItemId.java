@@ -1,13 +1,22 @@
 package com.example.bookstore.model;
 
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
 import java.io.Serializable;
-import java.util.Objects;
 
+@Embeddable
 public class ShoppingCartItemId implements Serializable {
+    @Column(name = "cart_id")
     private Long cartId;
-    private String isbn;
+    @Column(name = "ISBN")
+    private String ISBN;
 
     public ShoppingCartItemId() {}
+
+    public ShoppingCartItemId(Long cartId, String ISBN) {
+        this.cartId = cartId;
+        this.ISBN = ISBN;
+    }
 
     public Long getCartId() {
         return cartId;
@@ -17,24 +26,24 @@ public class ShoppingCartItemId implements Serializable {
         this.cartId = cartId;
     }
 
-    public String getIsbn() {
-        return isbn;
+    public String getISBN() {
+        return ISBN;
     }
 
-    public void setIsbn(String isbn) {
-        this.isbn = isbn;
+    public void setISBN(String isbn) {
+        this.ISBN = isbn;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof ShoppingCartItemId)) return false;
         ShoppingCartItemId that = (ShoppingCartItemId) o;
-        return Objects.equals(cartId, that.cartId) && Objects.equals(isbn, that.isbn);
+        return cartId.equals(that.cartId) && ISBN.equals(that.ISBN);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(cartId, isbn);
+        return 31 * cartId.hashCode() + ISBN.hashCode();
     }
 }

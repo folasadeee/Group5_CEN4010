@@ -1,6 +1,7 @@
 package com.example.bookstore.model;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "books")
@@ -16,6 +17,9 @@ public class Book {
 
     @ManyToOne
     private Publisher publisher;
+
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<ShoppingCartItem> cartItems;
 
     public String getISBN() {
         return ISBN;
