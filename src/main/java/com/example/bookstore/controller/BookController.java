@@ -6,11 +6,13 @@ import com.example.bookstore.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.awt.print.Pageable;
 import java.util.List;
 import java.util.Optional;
 
@@ -65,6 +67,13 @@ public class BookController {
 
                     return bookDTO;
                 })
+                .toList();
+    }
+
+    @GetMapping("/top-sellers")
+    public List<Book> getTopSellers(){
+        return bookRepository.findTopTenSellers()
+                .stream().limit(10)
                 .toList();
     }
 
