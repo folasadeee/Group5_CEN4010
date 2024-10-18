@@ -71,10 +71,19 @@ public class BookController {
     }
 
     @GetMapping("/top-sellers")
-    public List<Book> getTopSellers(){
-        return bookRepository.findTopTenSellers()
+    public List<BookDTO> getTopSellers(){
+        List<Book> books = bookRepository.findTopTenSellers()
                 .stream().limit(10)
                 .toList();
+
+        return books.stream()
+                .map (book -> {
+                    BookDTO bookDTO = new BookDTO(book.getISBN(), book.getTitle(), book.getCopiesSold());
+                    Link detailsLink = linkTo(methodOn(BookController.class).getBookByISBN(book.getISBN()))
+                            .withRel("details");
+                    bookDTO.add(detailsLink);
+                    return bookDTO;
+                }).toList();
     }
 
     @GetMapping("/{isbn}")
