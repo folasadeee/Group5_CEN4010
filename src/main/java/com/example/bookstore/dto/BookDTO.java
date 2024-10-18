@@ -1,11 +1,12 @@
 package com.example.bookstore.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import org.springframework.hateoas.RepresentationModel;
 
 import javax.persistence.*;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class BookDTO {
+public class BookDTO extends RepresentationModel<BookDTO> {
     @Id
     private String ISBN;
     private String title;
