@@ -11,6 +11,7 @@ public class BookDTO extends RepresentationModel<BookDTO> {
     private String ISBN;
     private String title;
     private String genre;
+    private int copiesSold;
 
     public BookDTO(String ISBN, String title) {
         this.ISBN = ISBN;
@@ -20,6 +21,12 @@ public class BookDTO extends RepresentationModel<BookDTO> {
         this.ISBN = ISBN;
         this.title = title;
         this.genre = genre;
+    }
+
+    public BookDTO(String ISBN, String title, int copiesSold) {
+        this.ISBN = ISBN;
+        this.title = title;
+        this.copiesSold = copiesSold;
     }
 
     public String getISBN() {
@@ -45,5 +52,13 @@ public class BookDTO extends RepresentationModel<BookDTO> {
     @Column(name = "genre")
     public void setGenre(String genre) {
         this.genre = genre;
+    }
+
+    public int getCopiesSold() {
+        return copiesSold;
+    }
+
+    public void setCopiesSold(int copiesSold) {
+        this.copiesSold = copiesSold;
     }
 }
