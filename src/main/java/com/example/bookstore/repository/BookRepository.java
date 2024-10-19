@@ -12,4 +12,12 @@ public interface BookRepository extends JpaRepository<Book, String> {
     List<Book> findBooksByAuthorId(@Param("authorId") Long authorId);
 
 
+
+public interface BookRepository extends JpaRepository<Book, String> {
+    List<Book> findByGenreIgnoreCase(String genre);
+
+
+    @Query("SELECT b FROM Book b ORDER BY b.copiesSold DESC")
+    List<Book> findTopTenSellers();
+
 }

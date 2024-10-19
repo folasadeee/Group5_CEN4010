@@ -1,11 +1,13 @@
 package com.example.bookstore.controller;
+
+import com.example.bookstore.dto.BookDTO;  
 import com.example.bookstore.model.Book;
-import com.example.bookstore.repository.BookRepository;
+import com.example.bookstore.service.BookService;
+import com.example.bookstore.repository.BookRepository;  
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -15,25 +17,27 @@ import com.example.bookstore.model.Author;
 import com.example.bookstore.repository.AuthorRepository;
 
 
+
 @RestController
 @RequestMapping("/api/books")
 public class BookController {
 
     @Autowired
-    private BookRepository bookRepository;
+    private BookService bookService;
 
     @Autowired
     private AuthorRepository authorRepository;
 
     @GetMapping
-    public List<Book> getAllBooks() {
-        return bookRepository.findAll();
+    public List<BookDTO> getAllBooks() {
+       return bookService.getAllBooks();
     }
 
-    @PostMapping
-    public Book createBook(@RequestBody Book book) {
-        return bookRepository.save(book);
+    @GetMapping("/search")
+    public List<BookDTO> getBooksByGenre(@RequestParam(required = false) String genre) {
+        return bookService.getBooksByGenre(genre);
     }
+
 
 
 // Suli
@@ -68,4 +72,16 @@ public class BookController {
         }
 
     }
+
+    @GetMapping("/top-sellers")
+    public List<BookDTO> getTopSellers(){
+       return bookService.getTopSellers();
+    }
+
+    @GetMapping("/{isbn}")
+    public ResponseEntity<Book> getBookByISBN(@PathVariable String isbn) {
+        return bookService.getBookByISBN(isbn);
+    }
+
+
 }
