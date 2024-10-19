@@ -1,12 +1,8 @@
 package com.example.bookstore.repository;
 
-import com.example.bookstore.dto.BookDTO;
 import com.example.bookstore.model.Book;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-
-import java.awt.print.Pageable;
-import java.util.ArrayList;
 import java.util.List;
 
 public interface BookRepository extends JpaRepository<Book, String> {
