@@ -8,12 +8,26 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import java.util.HashMap;
+
+import java.util.Map;
+import java.util.Optional;
+
+import org.springframework.http.HttpStatus;
+import com.example.bookstore.model.Author;
+
+import com.example.bookstore.repository.AuthorRepository;
+
+
 @RestController
 @RequestMapping("/api/books")
 public class BookController {
 
     @Autowired
     private BookRepository bookRepository;
+
+    @Autowired
+    private AuthorRepository authorRepository;
 
     @GetMapping
     public List<Book> getAllBooks() {
@@ -24,26 +38,27 @@ public class BookController {
     public Book createBook(@RequestBody Book book) {
         return bookRepository.save(book);
     }
-}
+
 
 //Suli
 // Retrieve book by ISBN
 
-@GetMapping("/{isbn}")
-public ResponseEntity<Map<String, Object>> getBookByIsbn(@PathVariable String isbn) {
-    Optional<Book> book = bookRepository.findById(isbn);
-    if (book.isPresent()) {
-        // Fetch author(s) associated with the book
-        List<Author> authors = authorRepository.findAuthorsByBookIsbn(isbn);
+    @GetMapping("/{isbn}")
+    public ResponseEntity<Map<String, Object>> getBookByIsbn(@PathVariable String isbn) {
+        Optional<Book> book = bookRepository.findById(isbn);
+        if (book.isPresent()) {
+            // Fetch author(s) associated with the book
+            List<Author> authors = authorRepository.findAuthorsByBookIsbn(isbn);
 
-        // Prepare the response with both book and author details
-        Map<String, Object> response = new HashMap<>();
-        response.put("book", book.get());
-        response.put("authors", authors);
+            // Prepare the response with both book and author details
+            Map<String, Object> response = new HashMap<>();
+            response.put("book", book.get());
+            response.put("authors", authors);
 
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    } else {
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
-}
 
+}
