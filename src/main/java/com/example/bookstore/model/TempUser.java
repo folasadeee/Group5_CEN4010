@@ -1,6 +1,7 @@
 package com.example.bookstore.model;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -12,12 +13,15 @@ public class TempUser {
     private String username;
     private String email;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Wishlist> wishlists;
+
     public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userID) {
-        this.userId = userID;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public String getUsername() {
@@ -34,5 +38,13 @@ public class TempUser {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Set<Wishlist> getWishlists() {
+        return wishlists;
+    }
+
+    public void setWishlists(Set<Wishlist> wishlists) {
+        this.wishlists = wishlists;
     }
 }
