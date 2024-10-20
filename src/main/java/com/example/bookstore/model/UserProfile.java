@@ -9,7 +9,7 @@ public class UserProfile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column (name = "user_id")
-    private Integer userId;
+    private Long userId;
 
     @Column (name = "username")
     private String username;
@@ -29,11 +29,11 @@ public class UserProfile {
     @Column (name = "email")
     private String email;
 
-    public Integer getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(Integer userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 
