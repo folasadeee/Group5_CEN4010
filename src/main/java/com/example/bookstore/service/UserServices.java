@@ -7,5 +7,5 @@ public interface UserServices {
     UserProfile createUser(UserProfile user);
     UserProfile retrieveUser(String username);
     UserProfile updateUser(String username);
-    UserProfile createUserCard(String username, CreditCard card);
+    CreditCard createUserCard(String username, CreditCard card);
 }

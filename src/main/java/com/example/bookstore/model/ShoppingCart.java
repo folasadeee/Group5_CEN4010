@@ -16,7 +16,7 @@ public class ShoppingCart {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private TempUser user;
+    private UserProfile user;
 
     public Long getCartId() {
         return cartId;
@@ -26,11 +26,11 @@ public class ShoppingCart {
         this.cartId = cartId;
     }
 
-    public TempUser getUser() {
+    public UserProfile getUser() {
         return user;
     }
 
-    public void setUser(TempUser user) {
+    public void setUserProfile(UserProfile user) {
         this.user = user;
     }
 }

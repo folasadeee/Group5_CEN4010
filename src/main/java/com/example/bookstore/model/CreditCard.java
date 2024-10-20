@@ -13,7 +13,7 @@ public class CreditCard {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private UserProfile userId;
+    private UserProfile userProfile;
 
     @Column (name = "expiration_date")
     @Temporal(TemporalType.DATE)
@@ -30,12 +30,12 @@ public class CreditCard {
         this.cardNum = cardNum;
     }
 
-    public UserProfile getUserId() {
-        return userId;
+    public UserProfile getUserProfile() {
+        return userProfile;
     }
 
-    public void setUserID(UserProfile userId) {
-        this.userId = userId;
+    public void setUserProfile(UserProfile userProfile) {
+        this.userProfile = userProfile;
     }
 
     public Date getExpirationDate() {
