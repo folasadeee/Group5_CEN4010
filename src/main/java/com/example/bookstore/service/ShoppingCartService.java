@@ -11,7 +11,7 @@ import com.example.bookstore.model.ShoppingCartItemId;
 import com.example.bookstore.repository.BookRepository;
 import com.example.bookstore.repository.ShoppingCartItemRepository;
 import com.example.bookstore.repository.ShoppingCartRepository;
-import com.example.bookstore.repository.TempUserRepository;
+import com.example.bookstore.repository.UserProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
@@ -34,7 +34,7 @@ public class ShoppingCartService {
     private BookRepository bookRepository;
 
     @Autowired
-    private TempUserRepository tempUserRepository;
+    private UserProfileRepository userProfileRepository;
 
 
     // Get all books in shopping cart ----------------------------------------------------------------------------------
@@ -79,7 +79,7 @@ public class ShoppingCartService {
         ShoppingCart cart = cartRepository.findByUserUserId(userId)
                 .orElseGet(() -> {
                     ShoppingCart newCart = new ShoppingCart();
-                    newCart.setUser(tempUserRepository.findById(userId)
+                    newCart.setUser(userProfileRepository.findById(userId)
                             .orElseThrow(() -> new RuntimeException("User not found")));
                     return cartRepository.save(newCart);
                 });
