@@ -79,7 +79,7 @@ public class ShoppingCartService {
         ShoppingCart cart = cartRepository.findByUserUserId(userId)
                 .orElseGet(() -> {
                     ShoppingCart newCart = new ShoppingCart();
-                    newCart.setUserProfile(UserProfileRepository.findById(userId)
+                    newCart.setUser(userProfileRepository.findById(userId)
                             .orElseThrow(() -> new RuntimeException("User not found")));
                     return cartRepository.save(newCart);
                 });

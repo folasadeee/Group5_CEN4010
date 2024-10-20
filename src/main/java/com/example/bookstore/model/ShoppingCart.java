@@ -30,7 +30,7 @@ public class ShoppingCart {
         return user;
     }
 
-    public void setUserProfile(UserProfile user) {
+    public void setUser(UserProfile user) {
         this.user = user;
     }
 
