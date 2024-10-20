@@ -24,6 +24,10 @@ public class WishlistService {
     @Autowired
     private BookRepository bookRepository;
 
+    public WishlistService(WishlistRepository wishlistRepository) {
+        this.wishlistRepository = wishlistRepository;
+    }
+
     // Create a new wishlist
     public void createWishlist(Long userId, String wishlistName) throws Exception {
         Optional<TempUser> user = tempUserRepository.findById(userId);
