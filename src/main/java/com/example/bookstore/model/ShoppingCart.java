@@ -13,7 +13,7 @@ public class ShoppingCart {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private TempUser user;
+    private UserProfile user;
 
     @OneToMany(mappedBy = "shoppingCart", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<ShoppingCartItem> items;
@@ -26,11 +26,11 @@ public class ShoppingCart {
         this.cartId = cartId;
     }
 
-    public TempUser getUser() {
+    public UserProfile getUser() {
         return user;
     }
 
-    public void setUser(TempUser user) {
+    public void setUser(UserProfile user) {
         this.user = user;
     }
 
