@@ -27,8 +27,7 @@ public class UserServicesImpl implements UserServices{
 
     @Override
     public UserProfile retrieveUser(String username) {
-        return null;
-        //TODO: return user
+        return userProfileRepository.findByUsername(username);
     }
 
     @Override

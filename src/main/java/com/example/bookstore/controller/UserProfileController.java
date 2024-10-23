@@ -27,7 +27,17 @@ public class UserProfileController {
         return ResponseEntity.ok(createdCard);
     }
 
-    //TODO: GET user
+    @GetMapping
+    public ResponseEntity<UserProfile> retrieveUser(@RequestParam String username) {
+        UserProfile returnUser = userServices.retrieveUser(username);
+
+        if(returnUser != null) {
+            return ResponseEntity.ok(returnUser);
+        }
+        else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
     //TODO: PUT/PATCH user
 }
