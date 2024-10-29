@@ -1,9 +1,9 @@
 package com.example.bookstore.controller;
 
-import com.example.bookstore.dto.BookDTO;  
+import com.example.bookstore.dto.BookDTO;
 import com.example.bookstore.model.Book;
 import com.example.bookstore.service.BookService;
-import com.example.bookstore.repository.BookRepository;  
+import com.example.bookstore.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

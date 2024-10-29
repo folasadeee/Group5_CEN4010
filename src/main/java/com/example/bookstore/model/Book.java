@@ -1,11 +1,12 @@
 package com.example.bookstore.model;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Set;
 
 @Entity
 @Table(name = "books")
-public class Book {
+public class Book implements Serializable {
     @Id
     private String ISBN;
     private String title;
