@@ -38,6 +38,7 @@ public class BookService {
         return books.stream()
                 .map(book -> {
                     BookDTO bookDTO = new BookDTO(book.getISBN(), book.getTitle(), book.getPrice());
+                    bookDTO.setPrice(book.getPrice());
                     bookDTO.setCopiesSold(book.getCopiesSold());
                     Link detailsLink =
                             linkTo(methodOn(BookController.class)
@@ -63,6 +64,8 @@ public class BookService {
         return books.stream()
                 .map(book -> {
                     BookDTO bookDTO = new BookDTO(book.getISBN(), book.getTitle(), book.getGenre());
+                    bookDTO.setPrice(book.getPrice());
+                    bookDTO.setCopiesSold(book.getCopiesSold());
                     Link detailsLink =
                             linkTo(methodOn(BookController.class)
                                     .getBookByISBN
@@ -83,6 +86,7 @@ public class BookService {
         return books.stream()
                 .map (book -> {
                     BookDTO bookDTO = new BookDTO(book.getISBN(), book.getTitle(), book.getCopiesSold());
+                    bookDTO.setPrice(book.getPrice());
                     Link detailsLink = linkTo(methodOn(BookController.class).getBookByISBN(book.getISBN()))
                             .withRel("details");
                     bookDTO.add(detailsLink);

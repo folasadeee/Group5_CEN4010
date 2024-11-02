@@ -28,7 +28,7 @@ public class RatingsService {
 
         System.out.println("Searching for books with genre greater than or equal to: " + rating);
 
-        List<BookRatingDTO> books = ratingsRepository.findDistinctTopByRatingGreaterThan(rating);
+        List<BookRatingDTO> books = ratingsRepository.findDistinctTopByRatingGreaterThanEqual(rating);
 
         if (books.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No books found with a rating greater than or equal to: " + rating);

@@ -17,9 +17,9 @@ public interface RatingsRepository extends JpaRepository<Ratings, RatingsId> {
     @Query("SELECT new com.example.bookstore.dto.BookRatingDTO(b.ISBN, b.title, ROUND(AVG(r.rating), 1)) " +
             "FROM Ratings r JOIN r.book b " +
             "GROUP BY b.ISBN, b.title " +
-            "HAVING AVG(r.rating) > :minRating " +
+            "HAVING AVG(r.rating) >= :minRating " +
             "ORDER BY AVG(r.rating) DESC")
-    List<BookRatingDTO> findDistinctTopByRatingGreaterThan(@Param("minRating") double minRating);
+    List<BookRatingDTO> findDistinctTopByRatingGreaterThanEqual(@Param("minRating") double minRating);
 }
 
 
