@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Scanner;
+import java.util.Map;
 
 @Service
 public class UserServicesImpl implements UserServices{
@@ -30,10 +30,33 @@ public class UserServicesImpl implements UserServices{
         return userProfileRepository.findByUsername(username);
     }
 
-    @Override
-    public UserProfile updateUser(String username) {
-        return null;
-        //TODO: update user
+
+    public UserProfile updateUser(String username, Map<String, Object> updates) {
+        UserProfile user = userProfileRepository.findByUsername(username);
+
+        updates.forEach((field, value) -> {
+            switch (field) {
+                case "email":
+                    System.out.println("You can not update your email address.");
+                    break;
+                case "username":
+                    user.setUsername((String) value);
+                    break;
+                case "password":
+                    user.setPassword((String) value);
+                    break;
+                case "firstName":
+                    user.setFirstName((String) value);
+                    break;
+                case "lastName":
+                    user.setLastName((String) value);
+                    break;
+                case "address":
+                    user.setAddress((String) value);
+                    break;
+            }
+        });
+        return userProfileRepository.save(user);
     }
     @Override
     public CreditCard createUserCard(String username, CreditCard card) {

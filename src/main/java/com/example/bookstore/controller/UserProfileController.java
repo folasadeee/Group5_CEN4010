@@ -7,6 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
+
 @RestController
 @RequestMapping("/api/users")
 public class UserProfileController {
@@ -38,6 +41,9 @@ public class UserProfileController {
             return ResponseEntity.notFound().build();
         }
     }
-
-    //TODO: PUT/PATCH user
+    @PutMapping
+    public ResponseEntity<UserProfile> updateUser(@RequestParam String username, @RequestBody Map<String, Object> updates) {
+        UserProfile updatedUser = userServices.updateUser(username, updates);
+        return ResponseEntity.ok(updatedUser);
+    }
 }
