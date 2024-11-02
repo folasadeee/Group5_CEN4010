@@ -65,20 +65,7 @@ public class BookController {
     public ResponseEntity<List<BookDTO>> discountBooksByPublisher(@RequestParam(value = "percentage", required = true) Double percentage,
                                                      @RequestParam(value = "publisherId", required = true) Long publisherId) {
 
-        bookService.discountBooksByPublisher(percentage, publisherId);
-
-        List<Book> books = bookService.getBooksByPublisherId(publisherId);
-
-        List<BookDTO> updatedBooks = books.stream()
-                .map (book -> {
-                    BookDTO bookDTO = new BookDTO(book.getISBN(), book.getTitle());
-                    Link detailsLink = linkTo(methodOn(BookController.class).getBookByISBN(book.getISBN()))
-                            .withRel("details");
-                    bookDTO.add(detailsLink);
-                    return bookDTO;
-                }).toList();
-
-        return ResponseEntity.ok(updatedBooks);
+        return bookService.discountBooksByPublisher(percentage, publisherId);
     }
 
     @GetMapping("/top-sellers")
