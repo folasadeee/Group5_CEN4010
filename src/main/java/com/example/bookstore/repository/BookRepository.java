@@ -20,7 +20,7 @@ public interface BookRepository extends JpaRepository<Book, String> {
 
     @Modifying
     @Query("UPDATE Book b SET b.price = b.price - (b.price * (:percentage /100.0)) WHERE b.publisher.publisherId = :publisherId")
-    int discountBooksByPercentageAndPublisher(@Param("percentage") Double percentage, @Param("publisherId") Long publisherId);
+    int discountBooksByPublisher(@Param("percentage") Double percentage, @Param("publisherId") Long publisherId);
 
     @Query("SELECT COUNT(b) from Book b WHERE b.publisher.publisherId = :publisherId")
     int countBooksByPublisherId(@Param("publisherId") Long publisherId);

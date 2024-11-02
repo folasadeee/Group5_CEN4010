@@ -37,7 +37,8 @@ public class BookService {
 
         return books.stream()
                 .map(book -> {
-                    BookDTO bookDTO = new BookDTO(book.getISBN(), book.getTitle());
+                    BookDTO bookDTO = new BookDTO(book.getISBN(), book.getTitle(), book.getPrice());
+                    bookDTO.setCopiesSold(book.getCopiesSold());
                     Link detailsLink =
                             linkTo(methodOn(BookController.class)
                                     .getBookByISBN
@@ -90,20 +91,19 @@ public class BookService {
     }
 
     @Transactional
-    public int discountBooksByPercentageAndPublisher(@RequestParam(required = true) Double percentage, @RequestParam(required = true) Long publisher_id) {
+    public int discountBooksByPublisher(@RequestParam(required = true) Double percentage, @RequestParam(required = true) Long publisher_id) {
 
-        if (percentage <= 0 || percentage >= 100) { // Throw error if rating is not between 0 and 100
+        if (percentage <= 0 || percentage >= 100) { // Throw error if percentage is not between 0 and 100
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Discount percent must be greater than 0 and less than 100");
         }
 
-        if (!publisherRepository.existsById(publisher_id)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Publisher with ID " + publisher_id + "not found");
+        if (!publisherRepository.existsById(publisher_id)) { // Check if publisher ID exists
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Publisher with ID " + publisher_id + " not found");
         }
-        System.out.println("Updating books with Publisher ID: " + publisher_id + " with Discount Percentage: " + percentage);
-        int count = bookRepository.countBooksByPublisherId(publisher_id);
-        System.out.println("Books found for publisher ID " + publisher_id + ": " + count);
 
-        int rowsModified = bookRepository.discountBooksByPercentageAndPublisher(percentage, publisher_id);
+        System.out.println("Updating books with Publisher ID: " + publisher_id + " with Discount Percentage: " + percentage);
+
+        int rowsModified = bookRepository.discountBooksByPublisher(percentage, publisher_id);
 
         System.out.println("Number of Records Updated: " + rowsModified);
         return rowsModified;

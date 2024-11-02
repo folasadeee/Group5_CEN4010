@@ -14,6 +14,8 @@ public class Book implements Serializable {
     private double price;
     private String genre;
     private int yearPublished;
+
+    @Column(name = "copies_sold")
     private int copiesSold;
 
     @ManyToOne

@@ -8,6 +8,7 @@ import com.example.bookstore.service.BookService;
 import com.example.bookstore.repository.BookRepository;
 import com.example.bookstore.service.RatingsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Link;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -19,6 +20,9 @@ import org.springframework.http.HttpStatus;
 import com.example.bookstore.model.Author;
 import com.example.bookstore.repository.AuthorRepository;
 import org.springframework.web.server.ResponseStatusException;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 
 @RestController
@@ -58,9 +62,23 @@ public class BookController {
     }
 
     @PatchMapping("/discount")
-    public int discountBooksByPercentageAndPublisher(@RequestParam(value = "percentage", required = true) Double percentage,
+    public ResponseEntity<List<BookDTO>> discountBooksByPublisher(@RequestParam(value = "percentage", required = true) Double percentage,
                                                      @RequestParam(value = "publisherId", required = true) Long publisherId) {
-        return bookService.discountBooksByPercentageAndPublisher(percentage, publisherId);
+
+        bookService.discountBooksByPublisher(percentage, publisherId);
+
+        List<Book> books = bookService.getBooksByPublisherId(publisherId);
+
+        List<BookDTO> updatedBooks = books.stream()
+                .map (book -> {
+                    BookDTO bookDTO = new BookDTO(book.getISBN(), book.getTitle());
+                    Link detailsLink = linkTo(methodOn(BookController.class).getBookByISBN(book.getISBN()))
+                            .withRel("details");
+                    bookDTO.add(detailsLink);
+                    return bookDTO;
+                }).toList();
+
+        return ResponseEntity.ok(updatedBooks);
     }
 
     @GetMapping("/top-sellers")
