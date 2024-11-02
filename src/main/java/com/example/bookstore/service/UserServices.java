@@ -3,7 +3,6 @@ package com.example.bookstore.service;
 import com.example.bookstore.model.CreditCard;
 import com.example.bookstore.model.UserProfile;
 
-import java.util.Map;
 
 public interface UserServices {
     UserProfile createUser(UserProfile user);
