@@ -1,7 +1,5 @@
 package com.example.bookstore.model;
 
-import org.apache.catalina.User;
-
 import javax.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;

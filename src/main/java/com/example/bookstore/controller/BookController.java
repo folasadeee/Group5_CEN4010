@@ -1,9 +1,11 @@
 package com.example.bookstore.controller;
 
 import com.example.bookstore.dto.BookDTO;
+import com.example.bookstore.dto.BookRatingDTO;
 import com.example.bookstore.model.Book;
 import com.example.bookstore.service.BookService;
 import com.example.bookstore.repository.BookRepository;
+import com.example.bookstore.service.RatingsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +28,9 @@ public class BookController {
     private BookService bookService;
 
     @Autowired
+    private RatingsService ratingsService;
+
+    @Autowired
     private AuthorRepository authorRepository;
 
     @Autowired
@@ -36,9 +41,14 @@ public class BookController {
        return bookService.getAllBooks();
     }
 
-    @GetMapping("/search")
-    public List<BookDTO> getBooksByGenre(@RequestParam(required = false) String genre) {
+    @GetMapping("/genre/{genre}")
+    public List<BookDTO> getBooksByGenre(@PathVariable String genre) {
         return bookService.getBooksByGenre(genre);
+    }
+
+    @GetMapping("/rating/{rating}")
+    public List<BookRatingDTO> getBooksByRating(@PathVariable Integer rating) {
+        return ratingsService.getBooksByRating(rating);
     }
 
 
