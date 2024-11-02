@@ -11,6 +11,10 @@ public class BookDTO extends RepresentationModel<BookDTO> {
     private String ISBN;
     private String title;
     private String genre;
+
+    private double price;
+
+    @Column(name = "copies_sold")
     private int copiesSold;
 
     public BookDTO(String ISBN, String title) {
@@ -23,11 +27,18 @@ public class BookDTO extends RepresentationModel<BookDTO> {
         this.genre = genre;
     }
 
+    public BookDTO(String ISBN, String title, double price) {
+        this.ISBN = ISBN;
+        this.title = title;
+        this.price = price;
+    }
+
     public BookDTO(String ISBN, String title, int copiesSold) {
         this.ISBN = ISBN;
         this.title = title;
         this.copiesSold = copiesSold;
     }
+
 
     public String getISBN() {
         return ISBN;
@@ -60,5 +71,13 @@ public class BookDTO extends RepresentationModel<BookDTO> {
 
     public void setCopiesSold(int copiesSold) {
         this.copiesSold = copiesSold;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
     }
 }
