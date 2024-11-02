@@ -17,6 +17,7 @@ public class Book implements Serializable {
     private int copiesSold;
 
     @ManyToOne
+    @JoinColumn(name = "publisher_publisher_id")
     private Publisher publisher;
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

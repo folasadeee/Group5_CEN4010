@@ -3,7 +3,9 @@ package com.example.bookstore.service;
 import com.example.bookstore.controller.BookController;
 import com.example.bookstore.dto.BookDTO;
 import com.example.bookstore.model.Book;
+import com.example.bookstore.model.Publisher;
 import com.example.bookstore.repository.BookRepository;
+import com.example.bookstore.repository.PublisherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -25,6 +28,9 @@ public class BookService {
 
     @Autowired
     private BookRepository bookRepository;
+
+    @Autowired
+    private PublisherRepository publisherRepository;
 
     public List<BookDTO> getAllBooks() {
         List<Book> books = bookRepository.findAll();
@@ -81,6 +87,31 @@ public class BookService {
                     bookDTO.add(detailsLink);
                     return bookDTO;
                 }).toList();
+    }
+
+    @Transactional
+    public int discountBooksByPercentageAndPublisher(@RequestParam(required = true) Double percentage, @RequestParam(required = true) Long publisher_id) {
+
+        if (percentage <= 0 || percentage >= 100) { // Throw error if rating is not between 0 and 100
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Discount percent must be greater than 0 and less than 100");
+        }
+
+        if (!publisherRepository.existsById(publisher_id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Publisher with ID " + publisher_id + "not found");
+        }
+        System.out.println("Updating books with Publisher ID: " + publisher_id + " with Discount Percentage: " + percentage);
+        int count = bookRepository.countBooksByPublisherId(publisher_id);
+        System.out.println("Books found for publisher ID " + publisher_id + ": " + count);
+
+        int rowsModified = bookRepository.discountBooksByPercentageAndPublisher(percentage, publisher_id);
+
+        System.out.println("Number of Records Updated: " + rowsModified);
+        return rowsModified;
+    }
+
+    public List<Book> getBooksByPublisherId(@RequestParam Long publisherId) {
+        System.out.println("Searching for books with publisherId: " + publisherId);
+        return publisherRepository.getBooksByPublisherId(publisherId);
     }
 
     public ResponseEntity<Book> getBookByISBN(@PathVariable String isbn) {
