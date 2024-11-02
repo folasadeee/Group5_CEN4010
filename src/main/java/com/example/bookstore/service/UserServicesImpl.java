@@ -31,14 +31,15 @@ public class UserServicesImpl implements UserServices{
     }
 
 
-    public UserProfile updateUser(String username, Map<String, Object> updates) {
+    public UserProfile updateUser(String username, String field, String value) {
         UserProfile user = userProfileRepository.findByUsername(username);
 
-        updates.forEach((field, value) -> {
+        if (user == null) {
+            throw new RuntimeException("User not found");
+        }
             switch (field) {
                 case "email":
-                    System.out.println("You can not update your email address.");
-                    break;
+                    throw new RuntimeException("You can not update your email address.");
                 case "username":
                     user.setUsername((String) value);
                     break;
@@ -54,8 +55,9 @@ public class UserServicesImpl implements UserServices{
                 case "address":
                     user.setAddress((String) value);
                     break;
+                default:
+                    throw new RuntimeException("That is not a field in your user profile.");
             }
-        });
         return userProfileRepository.save(user);
     }
     @Override

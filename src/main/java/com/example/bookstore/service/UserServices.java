@@ -8,6 +8,6 @@ import java.util.Map;
 public interface UserServices {
     UserProfile createUser(UserProfile user);
     UserProfile retrieveUser(String username);
-    UserProfile updateUser(String username, Map<String, Object> updates);
+    UserProfile updateUser(String username, String field, String value);
     CreditCard createUserCard(String username, CreditCard card);
 }

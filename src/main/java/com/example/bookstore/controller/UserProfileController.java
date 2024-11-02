@@ -41,9 +41,9 @@ public class UserProfileController {
             return ResponseEntity.notFound().build();
         }
     }
-    @PutMapping
-    public ResponseEntity<UserProfile> updateUser(@RequestParam String username, @RequestBody Map<String, Object> updates) {
-        UserProfile updatedUser = userServices.updateUser(username, updates);
+    @PutMapping("/{username}/update/{field}")
+    public ResponseEntity<UserProfile> updateUser(@PathVariable String username, @PathVariable String field, @RequestParam String value) {
+        UserProfile updatedUser = userServices.updateUser(username, field, value);
         return ResponseEntity.ok(updatedUser);
     }
 }
