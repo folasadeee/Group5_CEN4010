@@ -95,7 +95,7 @@ public class BookService {
     }
 
     @Transactional
-    public ResponseEntity<List<BookDTO>> discountBooksByPublisher(@RequestParam(required = true) Double percentage, @RequestParam(required = true) Long publisherId) {
+    public void discountBooksByPublisher(@RequestParam(required = true) Double percentage, @RequestParam(required = true) Long publisherId) {
 
         if (percentage <= 0 || percentage >= 100) { // Throw error if percentage is not between 0 and 100
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Discount percent must be greater than 0 and less than 100");
@@ -111,21 +111,6 @@ public class BookService {
 
         System.out.println("Number of Records Updated: " + rowsModified);
 
-
-        List<Book> books = getBooksByPublisherId(publisherId);
-
-        List<BookDTO> updatedBooks = books.stream()
-                .map (book -> {
-                    BookDTO bookDTO = new BookDTO(book.getISBN(), book.getTitle());
-                    bookDTO.setPrice(book.getPrice());
-                    bookDTO.setCopiesSold(book.getCopiesSold());
-                    Link detailsLink = linkTo(methodOn(BookController.class).getBookByISBN(book.getISBN()))
-                            .withRel("details");
-                    bookDTO.add(detailsLink);
-                    return bookDTO;
-                }).toList();
-
-        return ResponseEntity.ok(updatedBooks);
     }
 
     public List<Book> getBooksByPublisherId(@RequestParam Long publisherId) {

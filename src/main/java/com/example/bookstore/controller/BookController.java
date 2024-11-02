@@ -62,10 +62,10 @@ public class BookController {
     }
 
     @PatchMapping("/discount")
-    public ResponseEntity<List<BookDTO>> discountBooksByPublisher(@RequestParam(value = "percentage", required = true) Double percentage,
+    public void discountBooksByPublisher(@RequestParam(value = "percentage", required = true) Double percentage,
                                                      @RequestParam(value = "publisherId", required = true) Long publisherId) {
 
-        return bookService.discountBooksByPublisher(percentage, publisherId);
+        bookService.discountBooksByPublisher(percentage, publisherId);
     }
 
     @GetMapping("/top-sellers")
