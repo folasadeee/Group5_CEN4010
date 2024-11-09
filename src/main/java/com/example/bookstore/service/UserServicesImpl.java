@@ -21,6 +21,9 @@ public class UserServicesImpl implements UserServices{
 
     @Override
     public UserProfile createUser(UserProfile user) {
+        if (user.getUsername() == null || user.getPassword() == null || user.getFirstName() == null || user.getLastName() == null) {
+            throw new IllegalArgumentException("The fields Username, Password, First name, or Last name can not be empty.");
+        }
         return userProfileRepository.save(user);
     }
 
@@ -67,6 +70,13 @@ public class UserServicesImpl implements UserServices{
     }
     @Override
     public CreditCard createUserCard(String username, CreditCard card) {
+        if (card.getCardNum() == null || card.getCardNum().length() != 16) {
+            throw new IllegalArgumentException("Card number must be 16 digits.");
+        }
+        if (card.getCvv() == null || card.getCvv().length() != 3) {
+            throw new IllegalArgumentException("CVV must be 3 digits.");
+        }
+
         UserProfile user = userProfileRepository.findByUsername(username);
         if (user == null) {
             throw new RuntimeException("User does not exist.");
@@ -78,11 +88,8 @@ public class UserServicesImpl implements UserServices{
     }
 
     public UserProfile createUserProfile(String username, String password, String firstName, String lastName, String address, String email) {
-        if (username == null || password == null || firstName == null || lastName == null) {
-            throw new IllegalArgumentException("The fields Username, Password, First name, or Last name can not be empty.");
-        }
-
         UserProfile user = new UserProfile();
+
         user.setUsername(username);
         user.setPassword(password);
         user.setFirstName(firstName);
@@ -94,13 +101,6 @@ public class UserServicesImpl implements UserServices{
     }
 
     public CreditCard createUserCard(String cardNum, String expirationInput, String cvv, UserProfile user) throws ParseException {
-        if (cardNum == null || cardNum.length() != 16) {
-            throw new IllegalArgumentException("Card number must be 16 digits.");
-        }
-        if (cvv == null || cvv.length() != 3) {
-            throw new IllegalArgumentException("CVV must be 3 digits.");
-        }
-
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM/yy");
         dateFormat.setLenient(false);
         Date expirationDate = dateFormat.parse(expirationInput);
