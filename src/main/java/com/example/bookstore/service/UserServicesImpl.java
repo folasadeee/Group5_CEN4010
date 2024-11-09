@@ -26,7 +26,13 @@ public class UserServicesImpl implements UserServices{
 
     @Override
     public UserProfile retrieveUser(String username) {
-        return userProfileRepository.findByUsername(username);
+        UserProfile user = userProfileRepository.findByUsername(username);
+
+        if (user == null) {
+            throw new RuntimeException("User not found");
+        }
+
+        return user;
     }
 
 
@@ -62,11 +68,13 @@ public class UserServicesImpl implements UserServices{
     @Override
     public CreditCard createUserCard(String username, CreditCard card) {
         UserProfile user = userProfileRepository.findByUsername(username);
-        if (user != null) {
+        if (user == null) {
+            throw new RuntimeException("User does not exist.");
+        }
+        else {
             card.setUserProfile(user);
             return creditCardRepository.save(card);
         }
-        return null;
     }
 
     public UserProfile createUserProfile(String username, String password, String firstName, String lastName, String address, String email) {
