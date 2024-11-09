@@ -78,8 +78,11 @@ public class UserServicesImpl implements UserServices{
     }
 
     public UserProfile createUserProfile(String username, String password, String firstName, String lastName, String address, String email) {
-        UserProfile user = new UserProfile();
+        if (username == null || password == null || firstName == null || lastName == null) {
+            throw new IllegalArgumentException("The fields Username, Password, First name, or Last name can not be empty.");
+        }
 
+        UserProfile user = new UserProfile();
         user.setUsername(username);
         user.setPassword(password);
         user.setFirstName(firstName);
@@ -91,6 +94,12 @@ public class UserServicesImpl implements UserServices{
     }
 
     public CreditCard createUserCard(String cardNum, String expirationInput, String cvv, UserProfile user) throws ParseException {
+        if (cardNum == null || cardNum.length() != 16) {
+            throw new IllegalArgumentException("Card number must be 16 digits.");
+        }
+        if (cvv == null || cvv.length() != 3) {
+            throw new IllegalArgumentException("CVV must be 3 digits.");
+        }
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM/yy");
         dateFormat.setLenient(false);

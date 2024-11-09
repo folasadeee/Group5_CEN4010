@@ -14,7 +14,6 @@ public class UserProfileController {
     @Autowired
     private UserServices userServices;
 
-    //User profile POST request
     @PostMapping
     public ResponseEntity<UserProfile> createUser(@RequestBody UserProfile userProfile) {
        UserProfile createdUser = userServices.createUser(userProfile);
