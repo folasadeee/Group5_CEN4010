@@ -20,8 +20,8 @@ public class BookAuthors implements Serializable {
     private Author author;
 
     @ManyToOne
-    @MapsId("ISBN")  // Maps the ISBN from BookAuthorsId
-    @JoinColumn(name = "isbn", referencedColumnName = "ISBN", nullable = false)
+    @MapsId("isbn")  // Maps the ISBN from BookAuthorsId (updated to match lowercase "isbn")
+    @JoinColumn(name = "isbn", referencedColumnName = "isbn", nullable = false) // updated to match "isbn"
     private Book book;
 
     // Constructors
@@ -30,7 +30,7 @@ public class BookAuthors implements Serializable {
     public BookAuthors(Author author, Book book) {
         this.author = author;
         this.book = book;
-        this.id = new BookAuthorsId(book.getISBN(), author.getAuthorId());
+        this.id = new BookAuthorsId(book.getIsbn(), author.getAuthorId()); // updated to getIsbn()
     }
 
     // Getters and Setters

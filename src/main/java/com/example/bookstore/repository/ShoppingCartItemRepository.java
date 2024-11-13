@@ -7,9 +7,13 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ShoppingCartItemRepository extends JpaRepository<ShoppingCartItem, ShoppingCartItemId> {
+
+    // Find all ShoppingCartItems by the User's userId
     List<ShoppingCartItem> findByShoppingCartUserUserId(Long userId);
-    Optional<ShoppingCartItem> findByShoppingCartCartIdAndBookISBN(Long cartId, String ISBN);
 
+    // Find a ShoppingCartItem by cartId and the ISBN of the Book
+    Optional<ShoppingCartItem> findByShoppingCartCartIdAndBookIsbn(Long cartId, String isbn);
+
+    // Find all ShoppingCartItems by cartId
     List<ShoppingCartItem> findByShoppingCartCartId(Long cartId);
-
 }

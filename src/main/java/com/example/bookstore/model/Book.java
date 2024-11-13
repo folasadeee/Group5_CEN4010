@@ -6,8 +6,11 @@ import java.util.Set;
 @Entity
 @Table(name = "books")
 public class Book {
+
     @Id
-    private String ISBN;
+    @Column(name = "isbn") // Map to lowercase "isbn" as in the database
+    private String isbn;  // Change to lowercase "isbn"
+
     private String title;
     private String description;
     private double price;
@@ -15,18 +18,20 @@ public class Book {
     private int yearPublished;
     private int copiesSold;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "publisher_id")
     private Publisher publisher;
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<ShoppingCartItem> cartItems;
 
-    public String getISBN() {
-        return ISBN;
+    // Getter and Setter
+    public String getIsbn() {
+        return isbn;
     }
 
-    public void setISBN(String ISBN) {
-        this.ISBN = ISBN;
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
     }
 
     public String getTitle() {

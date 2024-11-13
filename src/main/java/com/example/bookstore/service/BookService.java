@@ -5,13 +5,9 @@ import com.example.bookstore.dto.BookDTO;
 import com.example.bookstore.model.Book;
 import com.example.bookstore.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -19,8 +15,7 @@ import java.util.List;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-@RestController
-@RequestMapping("/api/books")
+@Service
 public class BookService {
 
     @Autowired
@@ -31,22 +26,17 @@ public class BookService {
 
         return books.stream()
                 .map(book -> {
-                    BookDTO bookDTO = new BookDTO(book.getISBN(), book.getTitle());
-                    Link detailsLink =
-                            linkTo(methodOn(BookController.class)
-                                    .getBookByISBN
-                                            (book.getISBN()))
-                                    .withRel("details");
-                    bookDTO.add(detailsLink);
-
+                    BookDTO bookDTO = new BookDTO(book.getIsbn(), book.getTitle());
+                    bookDTO.add(
+                            linkTo(methodOn(BookController.class).getBookByIsbn(book.getIsbn())).withRel("details")
+                    );
                     return bookDTO;
                 })
                 .toList();
     }
 
-    public List<BookDTO> getBooksByGenre(@RequestParam(required = false) String genre) {
+    public List<BookDTO> getBooksByGenre(String genre) {
         genre = genre.trim();
-        System.out.println("Searching for genre: " + genre);
         List<Book> books = bookRepository.findByGenreIgnoreCase(genre);
 
         if (books.isEmpty()) {
@@ -55,38 +45,43 @@ public class BookService {
 
         return books.stream()
                 .map(book -> {
-                    BookDTO bookDTO = new BookDTO(book.getISBN(), book.getTitle(), book.getGenre());
-                    Link detailsLink =
-                            linkTo(methodOn(BookController.class)
-                                    .getBookByISBN
-                                            (book.getISBN()))
-                                    .withRel("details");
-                    bookDTO.add(detailsLink);
-
+                    BookDTO bookDTO = new BookDTO(book.getIsbn(), book.getTitle(), book.getGenre());
+                    bookDTO.add(
+                            linkTo(methodOn(BookController.class).getBookByIsbn(book.getIsbn())).withRel("details")
+                    );
                     return bookDTO;
                 })
                 .toList();
     }
 
     public List<BookDTO> getTopSellers(){
-        List<Book> books = bookRepository.findTopTenSellers()
-                .stream().limit(10)
-                .toList();
+        List<Book> books = bookRepository.findTopTenSellers().stream().limit(10).toList();
 
         return books.stream()
-                .map (book -> {
-                    BookDTO bookDTO = new BookDTO(book.getISBN(), book.getTitle(), book.getCopiesSold());
-                    Link detailsLink = linkTo(methodOn(BookController.class).getBookByISBN(book.getISBN()))
-                            .withRel("details");
-                    bookDTO.add(detailsLink);
+                .map(book -> {
+                    BookDTO bookDTO = new BookDTO(book.getIsbn(), book.getTitle(), book.getCopiesSold());
+                    bookDTO.add(
+                            linkTo(methodOn(BookController.class).getBookByIsbn(book.getIsbn())).withRel("details")
+                    );
                     return bookDTO;
-                }).toList();
+                })
+                .toList();
     }
 
-    public ResponseEntity<Book> getBookByISBN(@PathVariable String isbn) {
-        Book book = bookRepository.findById(isbn)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Book not found with ISBN: " + isbn));
-        return ResponseEntity.ok(book);
+    public Book getBookByISBN(String isbn) {
+        isbn = isbn.trim();  // Trim any hidden whitespace
+        System.out.println("Searching for ISBN: " + isbn);  // Log ISBN before querying
+        String finalIsbn = isbn;
+        return bookRepository.findById(isbn)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Book not found with ISBN: " + finalIsbn));
     }
 
+
+
+    public void addBook(Book book) {
+        if (book.getIsbn() == null || book.getIsbn().isEmpty()) {
+            throw new IllegalArgumentException("ISBN must be provided.");
+        }
+        bookRepository.save(book);
+    }
 }

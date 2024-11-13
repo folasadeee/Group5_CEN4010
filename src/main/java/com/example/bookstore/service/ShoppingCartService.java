@@ -87,7 +87,7 @@ public class ShoppingCartService {
         Book book = bookRepository.findById(isbn)
                 .orElseThrow(() -> new RuntimeException("Book not found"));
 
-        ShoppingCartItem item = cartItemRepository.findByShoppingCartCartIdAndBookISBN(cart.getCartId(), isbn)
+        ShoppingCartItem item = cartItemRepository.findByShoppingCartCartIdAndBookIsbn(cart.getCartId(), isbn)
                 .orElseGet(() -> {
                     ShoppingCartItem newItem = new ShoppingCartItem();
                     ShoppingCartItemId newId = new ShoppingCartItemId();
@@ -109,7 +109,7 @@ public class ShoppingCartService {
         ShoppingCart shoppingCart = cartRepository.findByUserUserId(userId)
                 .orElseThrow(() -> new RuntimeException("Shopping cart not found"));
 
-        ShoppingCartItem book = cartItemRepository.findByShoppingCartCartIdAndBookISBN(shoppingCart.getCartId(), isbn)
+        ShoppingCartItem book = cartItemRepository.findByShoppingCartCartIdAndBookIsbn(shoppingCart.getCartId(), isbn)
                 .orElseThrow(() -> new RuntimeException("Book not found in shopping cart"));
 
         book.setQuantity(book.getQuantity() - 1);
