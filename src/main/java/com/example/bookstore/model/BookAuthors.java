@@ -20,7 +20,7 @@ public class BookAuthors implements Serializable {
     private Author author;
 
     @ManyToOne
-    @MapsId("isbn")  // Maps the ISBN from BookAuthorsId (updated to match lowercase "isbn")
+    @MapsId("isbn")  // Maps the ISBN from BookAuthorsId
     @JoinColumn(name = "isbn", referencedColumnName = "isbn", nullable = false) // updated to match "isbn"
     private Book book;
 

@@ -69,7 +69,7 @@ public class BookService {
     }
 
     public Book getBookByISBN(String isbn) {
-        isbn = isbn.trim();  // Trim any hidden whitespace
+        isbn = isbn.trim();
         System.out.println("Searching for ISBN: " + isbn);  // Log ISBN before querying
         String finalIsbn = isbn;
         return bookRepository.findById(isbn)
