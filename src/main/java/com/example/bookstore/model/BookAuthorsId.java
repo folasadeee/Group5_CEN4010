@@ -37,7 +37,6 @@ public class BookAuthorsId implements Serializable {
         this.authorId = authorId;
     }
 
-    // Override equals() and hashCode() for composite key comparison
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

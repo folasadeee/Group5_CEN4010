@@ -66,10 +66,11 @@ public class BookController {
         }
     }
 
-    // New endpoint to add a book
     @PostMapping
     public ResponseEntity<Void> addBook(@RequestBody Book book) {
         bookService.addBook(book);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
+
+
 }
