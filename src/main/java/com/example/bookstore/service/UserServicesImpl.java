@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Scanner;
 
 @Service
 public class UserServicesImpl implements UserServices{
@@ -22,27 +21,70 @@ public class UserServicesImpl implements UserServices{
 
     @Override
     public UserProfile createUser(UserProfile user) {
+        if (user.getUsername() == null || user.getPassword() == null || user.getFirstName() == null || user.getLastName() == null) {
+            throw new IllegalArgumentException("The fields Username, Password, First name, or Last name can not be empty.");
+        }
         return userProfileRepository.save(user);
     }
 
     @Override
     public UserProfile retrieveUser(String username) {
-        return userProfileRepository.findByUsername(username);
+        UserProfile user = userProfileRepository.findByUsername(username);
+
+        if (user == null) {
+            throw new RuntimeException("User not found");
+        }
+
+        return user;
     }
 
-    @Override
-    public UserProfile updateUser(String username) {
-        return null;
-        //TODO: update user
+
+    public UserProfile updateUser(String username, String field, String value) {
+        UserProfile user = userProfileRepository.findByUsername(username);
+
+        if (user == null) {
+            throw new RuntimeException("User not found");
+        }
+            switch (field) {
+                case "email":
+                    throw new RuntimeException("You can not update your email address.");
+                case "username":
+                    user.setUsername((String) value);
+                    break;
+                case "password":
+                    user.setPassword((String) value);
+                    break;
+                case "firstName":
+                    user.setFirstName((String) value);
+                    break;
+                case "lastName":
+                    user.setLastName((String) value);
+                    break;
+                case "address":
+                    user.setAddress((String) value);
+                    break;
+                default:
+                    throw new RuntimeException("That is not a field in your user profile.");
+            }
+        return userProfileRepository.save(user);
     }
     @Override
     public CreditCard createUserCard(String username, CreditCard card) {
+        if (card.getCardNum() == null || card.getCardNum().length() != 16) {
+            throw new IllegalArgumentException("Card number must be 16 digits.");
+        }
+        if (card.getCvv() == null || card.getCvv().length() != 3) {
+            throw new IllegalArgumentException("CVV must be 3 digits.");
+        }
+
         UserProfile user = userProfileRepository.findByUsername(username);
-        if (user != null) {
+        if (user == null) {
+            throw new RuntimeException("User does not exist.");
+        }
+        else {
             card.setUserProfile(user);
             return creditCardRepository.save(card);
         }
-        return null;
     }
 
     public UserProfile createUserProfile(String username, String password, String firstName, String lastName, String address, String email) {
@@ -59,7 +101,6 @@ public class UserServicesImpl implements UserServices{
     }
 
     public CreditCard createUserCard(String cardNum, String expirationInput, String cvv, UserProfile user) throws ParseException {
-
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM/yy");
         dateFormat.setLenient(false);
         Date expirationDate = dateFormat.parse(expirationInput);

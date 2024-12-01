@@ -14,7 +14,6 @@ public class UserProfileController {
     @Autowired
     private UserServices userServices;
 
-    //User profile POST request
     @PostMapping
     public ResponseEntity<UserProfile> createUser(@RequestBody UserProfile userProfile) {
        UserProfile createdUser = userServices.createUser(userProfile);
@@ -38,6 +37,9 @@ public class UserProfileController {
             return ResponseEntity.notFound().build();
         }
     }
-
-    //TODO: PUT/PATCH user
+    @PutMapping("/{username}/update/{field}")
+    public ResponseEntity<UserProfile> updateUser(@PathVariable String username, @PathVariable String field, @RequestParam String value) {
+        UserProfile updatedUser = userServices.updateUser(username, field, value);
+        return ResponseEntity.ok(updatedUser);
+    }
 }
