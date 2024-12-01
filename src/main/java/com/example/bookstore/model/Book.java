@@ -1,23 +1,24 @@
 package com.example.bookstore.model;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.Set;
 
 @Entity
 @Table(name = "books")
-public class Book implements Serializable {
+public class Book {
     @Id
-    private String ISBN;
+    @Column(name = "isbn") // Map to lowercase "isbn" as in the database
+    private String isbn;  // Change to lowercase "isbn"
+
     private String title;
     private String description;
     private double price;
     private String genre;
     private int yearPublished;
-
-    @Column(name = "copies_sold")
     private int copiesSold;
 
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "publisher_id")
     @ManyToOne
     @JoinColumn(name = "publisher_publisher_id")
     private Publisher publisher;
@@ -25,12 +26,13 @@ public class Book implements Serializable {
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<ShoppingCartItem> cartItems;
 
-    public String getISBN() {
-        return ISBN;
+    // Getter and Setter
+    public String getIsbn() {
+        return isbn;
     }
 
-    public void setISBN(String ISBN) {
-        this.ISBN = ISBN;
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
     }
 
     public String getTitle() {

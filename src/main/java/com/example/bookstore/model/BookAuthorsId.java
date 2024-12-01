@@ -1,10 +1,14 @@
 package com.example.bookstore.model;
 
+import javax.persistence.Column;
 import java.io.Serializable;
 import java.util.Objects;
 
 public class BookAuthorsId implements Serializable {
+    @Column(name = "isbn")
     private String ISBN;
+
+    @Column(name = "author_id") // Match column name in DB
     private Long authorId;
 
     // Default constructor
@@ -33,7 +37,6 @@ public class BookAuthorsId implements Serializable {
         this.authorId = authorId;
     }
 
-    // Override equals() and hashCode() for composite key comparison
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
